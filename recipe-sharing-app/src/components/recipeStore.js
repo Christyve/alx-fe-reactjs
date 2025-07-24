@@ -4,36 +4,41 @@ export const useRecipeStore = create((set) => ({
   recipes: [],
   searchTerm: '',
   filteredRecipes: [],
-  
+  favorites: [],
+  recommendations: [],
+
+  // Core actions
   addRecipe: (newRecipe) =>
     set((state) => {
-      const updatedRecipes = [...state.recipes, newRecipe];
+      const updated = [...state.recipes, newRecipe];
       return {
-        recipes: updatedRecipes,
-        filteredRecipes: filter(updatedRecipes, state.searchTerm),
+        recipes: updated,
+        filteredRecipes: filter(updated, state.searchTerm),
       };
     }),
 
   deleteRecipe: (id) =>
     set((state) => {
-      const updatedRecipes = state.recipes.filter((r) => r.id !== id);
+      const updated = state.recipes.filter((r) => r.id !== id);
       return {
-        recipes: updatedRecipes,
-        filteredRecipes: filter(updatedRecipes, state.searchTerm),
+        recipes: updated,
+        filteredRecipes: filter(updated, state.searchTerm),
+        favorites: state.favorites.filter((favId) => favId !== id),
       };
     }),
 
   updateRecipe: (updatedRecipe) =>
     set((state) => {
-      const updatedRecipes = state.recipes.map((recipe) =>
+      const updated = state.recipes.map((recipe) =>
         recipe.id === updatedRecipe.id ? updatedRecipe : recipe
       );
       return {
-        recipes: updatedRecipes,
-        filteredRecipes: filter(updatedRecipes, state.searchTerm),
+        recipes: updated,
+        filteredRecipes: filter(updated, state.searchTerm),
       };
     }),
 
+  // Search actions
   setSearchTerm: (term) =>
     set((state) => ({
       searchTerm: term,
@@ -45,11 +50,13 @@ export const useRecipeStore = create((set) => ({
       recipes,
       filteredRecipes: filter(recipes, state.searchTerm),
     })),
-}));
 
-// Utility function
-const filter = (recipes, term) => {
-  return recipes.filter((recipe) =>
-    recipe.title.toLowerCase().includes(term.toLowerCase())
-  );
-};
+  // Favorites
+  addFavorite: (recipeId) =>
+    set((state) => ({
+      favorites: [...new Set([...state.favorites, recipeId])],
+    })),
+
+  removeFavorite: (recipeId) =>
+    set((state) => ({
+      fav
