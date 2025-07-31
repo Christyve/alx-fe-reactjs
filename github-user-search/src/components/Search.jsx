@@ -5,7 +5,7 @@ function Search() {
   const [form, setForm] = useState({
     username: '',
     location: '',
-    repos: '',
+    minRepos: '',
   });
 
   const [users, setUsers] = useState([]);
@@ -54,9 +54,9 @@ function Search() {
         />
         <input
           type="number"
-          name="repos"
+          name="minRepos"
           placeholder="Minimum Repositories"
-          value={form.repos}
+          value={form.minRepos}
           onChange={handleChange}
           className="w-full p-2 border rounded"
         />
