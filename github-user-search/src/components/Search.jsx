@@ -1,21 +1,30 @@
 import { useState } from 'react';
-import { fetchUserData } from '../services/githubService';
+import { fetchAdvancedUserData } from '../services/githubService';
 
 function Search() {
-  const [username, setUsername] = useState('');
-  const [user, setUser] = useState(null);
+  const [form, setForm] = useState({
+    username: '',
+    location: '',
+    repos: '',
+  });
+
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(false);
-    setUser(null);
+    setUsers([]);
 
     try {
-      const data = await fetchUserData(username);
-      setUser(data);
+      const results = await fetchAdvancedUserData(form);
+      setUsers(results);
     } catch (err) {
       setError(true);
     } finally {
@@ -24,27 +33,56 @@ function Search() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-3xl mx-auto p-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <h2 className="text-xl font-semibold">Advanced GitHub User Search</h2>
         <input
           type="text"
-          placeholder="Enter GitHub username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          placeholder="Username"
+          value={form.username}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
         />
-        <button type="submit">Search</button>
+        <input
+          type="text"
+          name="location"
+          placeholder="Location"
+          value={form.location}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="number"
+          name="repos"
+          placeholder="Minimum Repositories"
+          value={form.repos}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+          Search
+        </button>
       </form>
 
-      <div style={{ marginTop: '1rem' }}>
+      <div className="mt-6">
         {loading && <p>Loading...</p>}
         {error && <p>Looks like we cant find the user</p>}
-        {user && (
-          <div>
-            <img src={user.avatar_url} alt={user.login} width="100" />
-            <p><strong>Name:</strong> {user.name || 'N/A'}</p>
-            <p><strong>Username:</strong> {user.login}</p>
-            <a href={user.html_url} target="_blank">Visit GitHub Profile</a>
-          </div>
+        {users.length > 0 && (
+          <ul className="space-y-4">
+            {users.map((user) => (
+              <li key={user.id} className="border p-4 rounded">
+                <div className="flex items-center gap-4">
+                  <img src={user.avatar_url} alt={user.login} className="w-16 h-16 rounded-full" />
+                  <div>
+                    <p><strong>{user.login}</strong></p>
+                    <p>Type: {user.type}</p>
+                    <a href={user.html_url} className="text-blue-500" target="_blank">View Profile</a>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
