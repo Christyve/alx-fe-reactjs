@@ -1,7 +1,6 @@
-// src/components/AddRecipeForm.jsx
 import React, { useState } from "react";
 
-export default function AddRecipeForm() {
+const AddRecipeForm = ({ onAddRecipe }) => {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
@@ -13,35 +12,39 @@ export default function AddRecipeForm() {
     if (!ingredients.trim()) {
       formErrors.ingredients = "Ingredients are required";
     } else if (ingredients.split(",").length < 2) {
-      formErrors.ingredients = "Please include at least two ingredients";
+      formErrors.ingredients = "Please enter at least two ingredients";
     }
     if (!steps.trim()) formErrors.steps = "Preparation steps are required";
-    return formErrors;
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formErrors = validateForm();
-    setErrors(formErrors);
-
-    if (Object.keys(formErrors).length === 0) {
-      console.log("Recipe Submitted:", { title, ingredients, steps });
+    if (validateForm()) {
+      onAddRecipe({
+        title,
+        ingredients: ingredients.split(",").map((ing) => ing.trim()),
+        steps,
+      });
       setTitle("");
       setIngredients("");
       setSteps("");
-      alert("Recipe added successfully!");
+      setErrors({});
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-4 md:p-8 mt-8">
-      <h2 className="text-xl md:text-2xl font-bold mb-4 text-center">
+    <div className="max-w-3xl mx-auto p-6 md:p-8 bg-white rounded-lg shadow-lg">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-orange-500">
         Add a New Recipe
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-        
-        {/* Title */}
-        <div>
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 md:space-y-6 md:grid md:grid-cols-2 md:gap-6"
+      >
+        {/* Recipe Title */}
+        <div className="col-span-2">
           <label className="block font-semibold mb-1">Recipe Title</label>
           <input
             type="text"
@@ -70,7 +73,7 @@ export default function AddRecipeForm() {
           )}
         </div>
 
-        {/* Steps */}
+        {/* Preparation Steps */}
         <div>
           <label className="block font-semibold mb-1">Preparation Steps</label>
           <textarea
@@ -85,13 +88,17 @@ export default function AddRecipeForm() {
         </div>
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-orange-500 text-white font-semibold py-2 md:py-3 rounded-lg hover:bg-orange-600 transition"
-        >
-          Add Recipe
-        </button>
+        <div className="col-span-2">
+          <button
+            type="submit"
+            className="w-full bg-orange-500 text-white font-semibold py-2 md:py-3 rounded-lg hover:bg-orange-600 transition"
+          >
+            Add Recipe
+          </button>
+        </div>
       </form>
     </div>
   );
-}
+};
+
+export default AddRecipeForm;
