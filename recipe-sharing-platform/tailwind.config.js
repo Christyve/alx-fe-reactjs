@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './index.html',
-    './src/**/*.{js,jsx,ts,tsx}',
+    './index.html',                // Root HTML file (Vite)
+    './src/**/*.{js,jsx,ts,tsx}',  // All React files
   ],
   theme: {
     extend: {},
