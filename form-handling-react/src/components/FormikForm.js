@@ -7,7 +7,9 @@ export default function FormikForm() {
   const validationSchema = Yup.object({
     username: Yup.string().required("Username is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
   });
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -15,7 +17,7 @@ export default function FormikForm() {
       const response = await fetch("https://jsonplaceholder.typicode.com/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values)
+        body: JSON.stringify(values),
       });
       const data = await response.json();
       alert("User registered with Formik: " + JSON.stringify(data));
@@ -26,7 +28,11 @@ export default function FormikForm() {
   };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
       <Form className="p-4 max-w-md mx-auto space-y-4 border rounded">
         <h2 className="text-xl font-bold">Formik Registration Form</h2>
 
