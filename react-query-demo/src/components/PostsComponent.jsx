@@ -15,10 +15,14 @@ function PostsComponent() {
     data,
     isLoading,
     isError,
-    error, // include error here ✅
+    error,
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
+    cacheTime: 1000 * 60 * 5, // 5 minutes ✅
+    staleTime: 1000 * 30,     // 30 seconds ✅
+    refetchOnWindowFocus: false, // don’t refetch on window focus ✅
+    keepPreviousData: true,   // keep old data while fetching new ✅
   });
 
   if (isLoading) {
@@ -26,7 +30,7 @@ function PostsComponent() {
   }
 
   if (isError) {
-    return <p>Error: {error.message}</p>; {/* now using error ✅ */}
+    return <p>Error: {error.message}</p>;
   }
 
   return (
