@@ -16,13 +16,15 @@ function PostsComponent() {
     isLoading,
     isError,
     error,
+    refetch,   // ✅ get refetch function
+    isFetching // ✅ for showing fetch state
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
-    cacheTime: 1000 * 60 * 5, // 5 minutes ✅
-    staleTime: 1000 * 30,     // 30 seconds ✅
-    refetchOnWindowFocus: false, // don’t refetch on window focus ✅
-    keepPreviousData: true,   // keep old data while fetching new ✅
+    cacheTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 30,     // 30 seconds
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
   });
 
   if (isLoading) {
@@ -36,6 +38,12 @@ function PostsComponent() {
   return (
     <div>
       <h2>Posts</h2>
+      <button onClick={() => refetch()}>
+        Refetch Posts
+      </button> {/* ✅ Button with onClick */}
+      
+      {isFetching && <p>Fetching new data...</p>} {/* ✅ extra feedback */}
+
       <ul>
         {data.map((post) => (
           <li key={post.id}>
