@@ -1,11 +1,11 @@
 import RegistrationForm from "./components/RegistrationForm";
-import FormikForm from "./components/formikForm";  // ✅ matches file name
+import formikForm from "./components/formikForm";
 
 function App() {
   return (
     <div className="p-6 space-y-8">
       <RegistrationForm />
-      <FormikForm />
+      <formikForm />
     </div>
   );
 }
