@@ -15,6 +15,7 @@ function PostsComponent() {
     data,
     isLoading,
     isError,
+    error, // include error here ✅
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
@@ -25,7 +26,7 @@ function PostsComponent() {
   }
 
   if (isError) {
-    return <p>Error fetching posts</p>;
+    return <p>Error: {error.message}</p>; {/* now using error ✅ */}
   }
 
   return (
